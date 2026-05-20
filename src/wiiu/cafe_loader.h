@@ -3,16 +3,18 @@
 #include "elf_reader.h"
 #include "cafe.h"
 
+#include <vector>
+
 class cafe_loader {
   elf_reader<elf32> *m_elf;
   uint32 m_relocAddr;
 
-  uint32 m_externStart;
-  uint32 m_externEnd;
+  ea_t m_externStart;
+  ea_t m_externEnd;
 
   struct import {
-    uint32 addr;
-    uint32 orig;
+    ea_t addr;
+    ea_t orig;
     const char *name;
   };
 

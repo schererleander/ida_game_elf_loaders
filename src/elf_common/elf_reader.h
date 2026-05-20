@@ -46,6 +46,8 @@
 #include "elf.h"
 
 #include <idaldr.h> // TODO: do not depend on this
+#include <algorithm>
+#include <cstring>
 #include <vector>
 
 static void printhex(const unsigned char *data, size_t size)

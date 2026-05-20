@@ -3,3 +3,12 @@
 /src/wiiu/build/
 /.vs
 /build
+src/wiiu/CMakeSettings.json
+
+src/wiiu/out/
+
+src/wiiu/.vs/
+
+.idea/
+
+ida93_test/

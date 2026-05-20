@@ -2,10 +2,12 @@
 #include "cafe.h"
 #include "tinfl.c"
 
+#include <cstring>
+
 cafe_loader::cafe_loader(elf_reader<elf32> *elf) 
   : m_elf(elf)
 {
-  m_externStart = 0xffffffff;
+  m_externStart = BADADDR;
   m_externEnd   = 0;
 }
 
@@ -54,7 +56,7 @@ void cafe_loader::applySegments() {
         continue;
 
       uchar perm = SEGPERM_READ;
-      char *sclass;
+      const char *sclass;
       
       if (section.sh_flags & SHF_WRITE)
         perm |= SEGPERM_WRITE;
@@ -72,8 +74,8 @@ void cafe_loader::applySegments() {
       
       const char *data = section.data();
 
-      const char *name = NULL;
-      if (section.sh_name != NULL)
+      const char *name = nullptr;
+      if (section.sh_name != 0)
         name = &stringTable[section.sh_name];
 
       applySegment(index, 
@@ -114,10 +116,10 @@ void cafe_loader::applySegment(uint32 sel,
 
   set_selector(sel, 0);
 
-  if (name == NULL)
+  if (name == nullptr)
     name = "";
 
-  add_segm_ex(&seg, name, sclass, NULL);
+  add_segm_ex(&seg, name, sclass, 0);
 
   if (load == true)
     mem2base(data, addr, addr + size, BADADDR);
@@ -199,7 +201,7 @@ void cafe_loader::applyRelocations() {
 }
 
 void cafe_loader::processImports() {
-  if (m_externStart != 0xffffffff && m_externEnd != 0) {
+  if (m_externStart != BADADDR && m_externEnd != 0) {
     segment_t ext;
     ext.start_ea = m_externStart;
     ext.end_ea = m_externEnd;
@@ -213,7 +215,7 @@ void cafe_loader::processImports() {
     ext.align = saRelQword;
 
     set_selector(255, 0);
-    add_segm_ex(&ext, ".extern", "XTRN", NULL);
+    add_segm_ex(&ext, ".extern", "XTRN", 0);
   }
 
   for (auto &import : m_imports) {
@@ -239,13 +241,13 @@ void cafe_loader::processImports() {
     else
       impnode.supset(import.addr, import.name);
 
-    import_module(lib.c_str() + 9, NULL, impnode, NULL, "wiiu");
+    import_module(lib.c_str() + 9, nullptr, impnode, nullptr, "wiiu");
   }
 }
 
 void cafe_loader::processExports() {
   segment_t *seg;
-  uint32 start = 0;
+  ea_t start = 0;
   uint32 numExports;
 
   if ((seg = get_segm_by_name(".fexports")) != NULL) {
