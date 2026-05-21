@@ -1,8 +1,10 @@
 # ida_game_elf_loaders
 A collection of user mode ELF loaders for the following game consoles:
-* PS3
-* PS Vita
+* ~~PS3~~
+* ~~PS Vita~~
 * Wii U
+
+You should use other repositories for the non-Wii U ELF loaders, as this one is only aimed at providing an updated version of the RPX loader.
 
 ## Installation
 Copy loader plugins to IDA loaders directory.
@@ -29,7 +31,7 @@ Optionally, you can also build using cmake with the following command
 `cmake --build ./`
 
 ## Notes
-These have only been tested and built using Visual Studio 2015 using IDA SDK 6.8.
 
-## Update
-Wii U Loader has been updated for IDA SDK 7.0+
+The current commit was compiled and tested to work with IDA 9.3.
+It also comes with improved Wii U RPX/RPL support, including compressed sections,
+FILE_INFO parsing, import/export metadata, and a broader set of relocations.
