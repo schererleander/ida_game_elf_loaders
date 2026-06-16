@@ -9,24 +9,39 @@ You should use other repositories for the non-Wii U ELF loaders, as this one is 
 ## Installation
 Copy loader plugins to IDA loaders directory.
 
+On Linux, this is usually:
+
+```sh
+mkdir -p "$HOME/.idapro/loaders"
+cp build/wiiu.so "$HOME/.idapro/loaders/"
+```
+
 ## Building
 
 ### Dependencies
+
 * IDA SDK
 * [CMake](https://cmake.org/download/)
 
 ### Generate Projects With CMake
+
 The IDA cmake module included will expect to find the IDA SDK in an `IDA_SDK_DIR` or `IDA_SDK` environment variable.
+
+On Linux, `IDADIR` must point to the IDA installation directory containing `libida.so`.
+
 If you would like to generate 64-bit EA targeted loaders, you need to add `-D IDA_64_BIT_EA_T=YES` to cmake command line.
 
-Navigate to the directory of the loader you would like to build in 'src/', then run the following command
+Navigate to the directory of the loader you would like to build in 'src/', then run the following command:
 
 `mkdir build && cd build && cmake ../`
+
+On Linux, for the Wii U loader, this will produce `wiiu.so`.
 
 This should create a build directory with your generated project files.
 
 ### Building
-Optionally, you can also build using cmake with the following command
+
+Optionally, you can also build using cmake with the following command:
 
 `cmake --build ./`
 
@@ -35,3 +50,5 @@ Optionally, you can also build using cmake with the following command
 The current commit was compiled and tested to work with IDA 9.3.
 It also comes with improved Wii U RPX/RPL support, including compressed sections,
 FILE_INFO parsing, import/export metadata, and a broader set of relocations.
+
+On Linux, the Wii U loader links against the installed IDA runtime library `libida.so`.
